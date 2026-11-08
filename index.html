@@ -74,7 +74,10 @@
 
         <form id="connectForm" class="space-y-3">
             <input class="field" type="text" name="name" placeholder="Your name" required>
-            <input class="field" type="tel" name="phone" placeholder="Phone number" required>
+            <input class="field" type="tel" name="phone" placeholder="Phone number (10 digits)" required
+                   inputmode="numeric" pattern="[0-9]{10}" minlength="10" maxlength="10"
+                   title="Please enter exactly 10 digits"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             <input class="field" type="email" name="email" placeholder="Email (optional)">
             <input class="field" type="url" name="linkedin" placeholder="LinkedIn URL (optional)">
             <input class="field" type="text" name="instagram" placeholder="Instagram username or link (optional)">
