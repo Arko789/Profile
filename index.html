@@ -4,30 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arkodeep Sen - Digital Business Card</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <script>
         tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            violet: '#7c3aed',
-                            indigo: '#6366f1',
-                            dark: '#0f172a',
-                            card: '#1e293b',
-                        }
-                    }
-                }
-            }
+            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } }
         }
     </script>
 
@@ -37,99 +20,120 @@
             min-height: 100vh;
             color: #f8fafc;
         }
-
         .glass-card {
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         .glass-button {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .glass-button:hover {
             background: rgba(255, 255, 255, 0.12);
             border-color: rgba(255, 255, 255, 0.25);
             transform: translateY(-2px);
         }
-
-        .glass-button:active {
-            transform: translateY(0);
-        }
-
-        /* Pulse glow animation */
-        .glow-avatar {
-            box-shadow: 0 0 25px -5px rgba(124, 58, 237, 0.5);
-        }
-
-        /* Smooth tab animation */
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
+        .glass-button:active { transform: translateY(0); }
+        .glow-avatar { box-shadow: 0 0 25px -5px rgba(124, 58, 237, 0.5); }
+        .fade-in { animation: fadeIn 0.35s ease-in-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .field {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border-radius: 0.75rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #334155;
+            color: #fff;
+            font-size: 16px; /* prevents zoom on iPhone */
+        }
+        .field:focus { outline: none; border-color: #8b5cf6; }
     </style>
 </head>
 <body class="flex items-center justify-center p-4 sm:p-6 antialiased">
 
-    <!-- Main Mobile Shell -->
-    <main class="w-full max-w-md glass-card rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden my-auto">
-        
-        <!-- Top Controls (Edit Button) -->
+    <!-- STEP 1: Contact exchange form (shown first) -->
+    <main id="gate" class="w-full max-w-md glass-card rounded-3xl p-6 sm:p-8 shadow-2xl my-auto fade-in">
+        <section class="flex flex-col items-center text-center mb-6">
+            <div class="w-20 h-20 rounded-full p-1 bg-gradient-to-tr from-violet-500 via-indigo-500 to-pink-500 glow-avatar mb-4">
+                <img src="Blazer.jpeg" alt="Arkodeep Sen"
+                     class="w-full h-full object-cover rounded-full bg-slate-800"
+                     onerror="this.src='https://placehold.co/200x200/1e293b/ffffff?text=AS'">
+            </div>
+            <h1 class="text-xl font-bold text-white mb-1">Nice to meet you! 👋</h1>
+            <p class="text-slate-400 text-sm max-w-xs leading-relaxed">
+                Share your details so we can stay in touch, and get my contact card right away.
+            </p>
+        </section>
+
+        <form id="connectForm" class="space-y-3">
+            <input class="field" type="text" name="name" placeholder="Your name" required>
+            <input class="field" type="tel" name="phone" placeholder="Phone number" required>
+            <input class="field" type="email" name="email" placeholder="Email (optional)">
+            <input class="field" type="url" name="linkedin" placeholder="LinkedIn URL (optional)">
+            <input class="field" type="text" name="instagram" placeholder="Instagram username or link (optional)">
+
+            <label class="flex items-start gap-2.5 text-xs text-slate-300 leading-relaxed pt-1">
+                <input type="checkbox" name="consent" required class="mt-0.5 w-4 h-4 accent-violet-500 shrink-0">
+                <span>I agree to share these details with Arkodeep so he can contact me.</span>
+            </label>
+
+            <button type="submit" id="submitBtn"
+                class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold shadow-lg shadow-violet-900/40 flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98]">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Share &amp; view my card</span>
+            </button>
+
+            <div class="text-center pt-1">
+                <a href="#" id="skipLink" class="text-xs text-slate-500 hover:text-slate-300 underline">Skip, just show me the card</a>
+            </div>
+        </form>
+    </main>
+
+    <!-- STEP 2: Business card (shown after submit or skip) -->
+    <main id="card" class="hidden w-full max-w-md glass-card rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden my-auto">
+
         <div class="absolute top-5 right-5 z-20">
-            <button onclick="toggleEditModal()" title="Customize Profile Details" 
+            <button onclick="toggleEditModal()" title="Customize Profile Details"
                 class="glass-button w-10 h-10 rounded-full flex items-center justify-center text-slate-300 hover:text-white text-sm shadow-md">
                 <i class="fa-solid fa-pen-to-square"></i>
             </button>
         </div>
 
-        <!-- Profile Section -->
         <section class="flex flex-col items-center text-center mt-2">
-            <!-- Avatar Container -->
             <div class="relative group mb-4">
                 <div class="w-28 h-28 rounded-full p-1 bg-gradient-to-tr from-violet-500 via-indigo-500 to-pink-500 glow-avatar">
-                    <img id="displayAvatar" 
-                         src="Blazer.jpeg" 
-                         alt="Arkodeep Sen Avatar" 
+                    <img id="displayAvatar" src="Blazer.jpeg" alt="Arkodeep Sen Avatar"
                          class="w-full h-full object-cover rounded-full bg-slate-800"
                          onerror="this.src='https://placehold.co/200x200/1e293b/ffffff?text=AS'">
                 </div>
                 <div class="absolute bottom-1 right-1 bg-emerald-500 w-4 h-4 rounded-full border-2 border-slate-900" title="Available for Networking"></div>
             </div>
 
-            <!-- Profile Info -->
             <h1 id="displayName" class="text-2xl font-bold tracking-tight text-white mb-1">Arkodeep Sen</h1>
-            <p id="displayTitle" class="text-violet-400 font-medium text-sm mb-3">CS Student & Developer</p>
+            <p id="displayTitle" class="text-violet-400 font-medium text-sm mb-3">CS Student &amp; Developer</p>
             <p id="displayBio" class="text-slate-400 text-xs sm:text-sm px-2 max-w-xs leading-relaxed mb-6">
-                Passionate about C/C++, Linux desktop environments, Web Dev, & exploring AI advancements.
+                Passionate about C/C++, Linux desktop environments, Web Dev, &amp; exploring AI advancements.
             </p>
         </section>
 
-        <!-- Primary Call To Action (Save Contact) -->
         <div class="mb-6">
-            <button onclick="downloadVCard()" 
+            <button onclick="downloadVCard()"
                 class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold shadow-lg shadow-violet-900/40 flex items-center justify-center gap-3 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
                 <i class="fa-solid fa-user-plus text-lg"></i>
                 <span>Save Contact to Phone (.VCF)</span>
             </button>
         </div>
 
-        <!-- Secondary Action Links / Social Buttons -->
         <div class="space-y-3 mb-6">
             <!-- LinkedIn -->
-            <a id="linkLinkedIn" href="https://www.linkedin.com/in/arkodeep-sen-23585a28b/" target="_blank" rel="noopener noreferrer" 
+            <a id="linkLinkedIn" href="https://www.linkedin.com/in/arkodeep-sen-23585a28b/" target="_blank" rel="noopener noreferrer"
                class="glass-button w-full p-3.5 rounded-2xl flex items-center justify-between text-slate-200 group">
                 <div class="flex items-center gap-3.5">
                     <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-lg">
@@ -143,7 +147,21 @@
                 <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500 group-hover:text-violet-400 transition-colors mr-1"></i>
             </a>
 
-            <!-- Email / Call direct Grid -->
+            <!-- Instagram -->
+            <a id="linkInstagram" href="https://www.instagram.com/arko.s_bin/" target="_blank" rel="noopener noreferrer"
+               class="glass-button w-full p-3.5 rounded-2xl flex items-center justify-between text-slate-200 group">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-pink-600/20 text-pink-400 flex items-center justify-center text-lg">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-sm font-semibold text-white">Instagram</div>
+                        <div class="text-xs text-slate-400">@arko.s_bin</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500 group-hover:text-pink-400 transition-colors mr-1"></i>
+            </a>
+
             <div class="grid grid-cols-2 gap-3 pt-1">
                 <a id="linkPhone" href="tel:+917890774098" class="glass-button p-3 rounded-2xl flex items-center justify-center gap-2.5 text-xs font-medium text-slate-300 hover:text-white">
                     <i class="fa-solid fa-phone text-emerald-400 text-sm"></i>
@@ -156,15 +174,12 @@
             </div>
         </div>
 
-        <!-- Footer Notice -->
         <footer class="text-center pt-2 border-t border-slate-800">
-            <p class="text-[11px] text-slate-500">
-                Scanned via QR Code • Web Card v1.0
-            </p>
+            <p class="text-[11px] text-slate-500">Scanned via QR Code • Web Card v1.1</p>
         </footer>
     </main>
 
-    <!-- Customization Modal (For editing phone/links on the fly) -->
+    <!-- Customization Modal -->
     <div id="editModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="glass-card w-full max-w-md rounded-3xl p-6 border border-slate-700 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-5">
@@ -180,23 +195,27 @@
             <form id="editForm" onsubmit="saveProfile(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
-                    <input type="text" id="inputName" value="Arkodeep Sen" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-white text-sm focus:outline-none focus:border-violet-500">
+                    <input type="text" id="inputName" value="Arkodeep Sen" class="field">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-300 mb-1">Title / Headline</label>
-                    <input type="text" id="inputTitle" value="CS Student & Developer" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-white text-sm focus:outline-none focus:border-violet-500">
+                    <input type="text" id="inputTitle" value="CS Student & Developer" class="field">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-300 mb-1">Phone Number (For vCard & Call)</label>
-                    <input type="text" id="inputPhone" value="+917890774098" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-white text-sm focus:outline-none focus:border-violet-500">
+                    <input type="text" id="inputPhone" value="+917890774098" class="field">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
-                    <input type="email" id="inputEmail" value="senarkodeep15@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-white text-sm focus:outline-none focus:border-violet-500">
+                    <input type="email" id="inputEmail" value="senarkodeep15@gmail.com" class="field">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-300 mb-1">LinkedIn Profile URL</label>
-                    <input type="url" id="inputLinkedIn" value="https://www.linkedin.com/in/arkodeep-sen-23585a28b/" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-white text-sm focus:outline-none focus:border-violet-500">
+                    <input type="url" id="inputLinkedIn" value="https://www.linkedin.com/in/arkodeep-sen-23585a28b/" class="field">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Instagram Profile URL</label>
+                    <input type="url" id="inputInstagram" value="https://www.instagram.com/arko.s_bin/" class="field">
                 </div>
 
                 <div class="pt-2 flex gap-3">
@@ -207,58 +226,88 @@
         </div>
     </div>
 
-    <!-- Notification Toast -->
+    <!-- Toast -->
     <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-700 text-white text-xs px-4 py-2.5 rounded-full shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2">
         <i class="fa-solid fa-circle-check text-emerald-400"></i>
         <span id="toastMsg">Action completed successfully</span>
     </div>
 
     <script>
-        // Data State
+        // Google Apps Script web app that appends rows to your Google Sheet
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTQvu-i3Dj5eK3iV_Erm8Kx8mHJtHQBrLOQzh1aJTqqt7oycfxu3DrVOMM05pbaM8g/exec";
+
         let profile = {
             name: "Arkodeep Sen",
             title: "CS Student & Developer",
             bio: "Passionate about C/C++, Linux desktop environments, Web Dev, & exploring AI advancements.",
             phone: "+917890774098",
             email: "senarkodeep15@gmail.com",
-            linkedin: "https://www.linkedin.com/in/arkodeep-sen-23585a28b/"
+            linkedin: "https://www.linkedin.com/in/arkodeep-sen-23585a28b/",
+            instagram: "https://www.instagram.com/arko.s_bin/"
         };
 
-        // Modal Controls
-        function toggleEditModal() {
-            const modal = document.getElementById('editModal');
-            modal.classList.toggle('hidden');
+        // ---- Gate: form -> card ----
+        function showCard() {
+            document.getElementById('gate').classList.add('hidden');
+            const card = document.getElementById('card');
+            card.classList.remove('hidden');
+            card.classList.add('fade-in');
+            window.scrollTo(0, 0);
         }
 
-        // Save updated info from modal
+        document.getElementById('connectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.querySelector('span').innerText = 'Sending...';
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: new FormData(form) });
+                showToast("Thanks! Your details were shared.");
+            } catch (err) {
+                // Still show the card so the visitor is never stuck
+            }
+            form.reset();
+            showCard();
+        });
+
+        document.getElementById('skipLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showCard();
+        });
+
+        // ---- Modal ----
+        function toggleEditModal() {
+            document.getElementById('editModal').classList.toggle('hidden');
+        }
+
         function saveProfile(e) {
             e.preventDefault();
-            
             profile.name = document.getElementById('inputName').value.trim();
             profile.title = document.getElementById('inputTitle').value.trim();
             profile.phone = document.getElementById('inputPhone').value.trim();
             profile.email = document.getElementById('inputEmail').value.trim();
             profile.linkedin = document.getElementById('inputLinkedIn').value.trim();
+            profile.instagram = document.getElementById('inputInstagram').value.trim();
 
-            // Update UI elements
             document.getElementById('displayName').innerText = profile.name;
             document.getElementById('displayTitle').innerText = profile.title;
             document.getElementById('linkPhone').href = `tel:${profile.phone}`;
             document.getElementById('linkEmail').href = `mailto:${profile.email}`;
             document.getElementById('linkLinkedIn').href = profile.linkedin;
+            document.getElementById('linkInstagram').href = profile.instagram;
 
             toggleEditModal();
             showToast("Contact details updated!");
         }
 
-        // vCard (.vcf) Generator Function
+        // ---- vCard ----
         function downloadVCard() {
             const nameParts = profile.name.split(' ');
             const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
             const firstName = nameParts[0] || '';
 
-            // Standard VCF 3.0 string format
-            const vCardData = 
+            const vCardData =
 `BEGIN:VCARD
 VERSION:3.0
 N:${lastName};${firstName};;;
@@ -267,32 +316,28 @@ TITLE:${profile.title}
 TEL;TYPE=CELL:${profile.phone}
 EMAIL;TYPE=INTERNET:${profile.email}
 URL;TYPE=LinkedIn:${profile.linkedin}
+URL;TYPE=Instagram:${profile.instagram}
 NOTE:Met at tech meet. CS Student interested in AI and Web Dev.
 END:VCARD`;
 
-            // Create blob and download link
             const blob = new Blob([vCardData], { type: 'text/vcard;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
-            
             link.href = url;
             link.setAttribute('download', `${firstName}_${lastName}_Contact.vcf`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            
+
             showToast("Saving contact card...");
         }
 
-        // Toast feedback handler
+        // ---- Toast ----
         function showToast(message) {
             const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            toastMsg.innerText = message;
-            
+            document.getElementById('toastMsg').innerText = message;
             toast.classList.remove('opacity-0', 'pointer-events-none');
             toast.classList.add('opacity-100');
-            
             setTimeout(() => {
                 toast.classList.remove('opacity-100');
                 toast.classList.add('opacity-0', 'pointer-events-none');
